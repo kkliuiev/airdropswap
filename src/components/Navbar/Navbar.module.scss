@@ -1,0 +1,59 @@
+@import 'styles/variables';
+
+.navbar {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+
+  @media (max-width: $mobile) {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 0;
+  }
+}
+
+.navbar__logo {
+  flex-basis: 16.7%;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+
+  img {
+    margin-right: 10px;
+    max-height: 40px;
+  }
+
+  h2 {
+    margin-bottom: 0;
+    font-size: 26px;
+  }
+
+  @media (max-width: $mobile) {
+    min-width: unset;
+    flex-basis: 100%;
+  }
+}
+
+.navbar__body {
+  flex-basis: 83.3%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-left: 40px;
+
+  @media (max-width: $mobile) {
+    justify-content: flex-start;
+    flex-basis: 100%;
+    width: 100%;
+    margin-top: 10px;
+    margin-left: 0;
+  }
+}
+
+.navbar__right {
+  width: auto;
+
+  @media (max-width: $mobile) {
+    width: 100%;
+  }
+}

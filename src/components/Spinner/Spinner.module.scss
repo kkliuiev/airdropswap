@@ -1,0 +1,14 @@
+@import 'styles/variables';
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+:global(.ant-spin).spinner__elemnet {
+  display: block;
+  color: #7150c7;
+  margin: 0 auto;
+}

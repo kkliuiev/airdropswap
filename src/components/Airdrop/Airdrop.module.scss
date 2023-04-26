@@ -1,0 +1,38 @@
+@import 'styles/variables';
+
+.container {
+  padding: 0 2rem;
+}
+
+.main {
+  padding: 0 0 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.airdrop {
+  margin: 40px auto 10px;
+}
+
+.demo {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 2rem 0;
+  gap: 1rem;
+}
+
+.noEvents {
+  pointer-events: none !important;
+}
