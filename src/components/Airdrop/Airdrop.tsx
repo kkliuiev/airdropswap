@@ -31,7 +31,7 @@ const MY_TOKEN_LIST = [
     name: 'USD Coin',
     address: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
     symbol: 'USDC',
-    decimals: 6,
+    decimals: 18,
     chainId: bsc.id,
     logoURI:
       'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
