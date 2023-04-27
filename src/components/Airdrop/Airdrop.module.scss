@@ -30,6 +30,10 @@
   align-items: center;
   justify-content: center;
   margin: 1rem 0 0 0;
+  width: 392px;
+  background-color: hsl(222, 37%, 12%);
+  border-radius: 8px;
+  padding: 10px;
 }
 
 .demo {
@@ -44,6 +48,10 @@
   font-size: 32px;
   font-weight: 600;
   margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 14px;
 }
 
 .noEvents {

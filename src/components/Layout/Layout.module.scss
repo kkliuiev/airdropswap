@@ -27,6 +27,10 @@
 }
 
 .layout__content {
+  background-image: url('~assets/icons/humsters.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+
   flex-basis: 100%;
   background-color: $lightpurple;
   border-top-left-radius: 16px;

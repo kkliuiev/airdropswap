@@ -155,8 +155,6 @@ const Airdrop: FC = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <div className={styles.banner} />
-
         <div className={styles.header}>
           <h1 className={styles.title}>Airdrop is LIVE!</h1>
           <Tooltip
@@ -164,7 +162,7 @@ const Airdrop: FC = () => {
             color="#4B83FB"
             placement="right"
           >
-            <h2 style={{ fontSize: 14, color: '#ccc' }}>
+            <h2 className={styles.subtitle}>
               <span style={{ marginRight: 5 }}>
                 To be eligible just make a swap
               </span>
