@@ -11,7 +11,7 @@ const Navbar: FC = () => {
     <div className={styles.navbar}>
       <div className={styles.navbar__logo}>
         <img src={logoSrc} alt="logo" />
-        <h2>Airdropswap</h2>
+        <h2>3drops.xyz</h2>
       </div>
       <div className={styles.navbar__body}>
         <div className={styles.navbar__right}>

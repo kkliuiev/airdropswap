@@ -164,7 +164,7 @@ const Airdrop: FC = () => {
           >
             <h2 className={styles.subtitle}>
               <span style={{ marginRight: 5 }}>
-                To be eligible just make a swap
+                Make any swap to join 3drops.xyz airdrop
               </span>
               <InfoCircleOutlined />
             </h2>
