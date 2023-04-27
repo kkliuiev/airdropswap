@@ -14,23 +14,36 @@
   height: 100%;
 }
 
-.title {
-  margin: 0;
-  font-size: 32px;
-  font-weight: 600;
-  margin-bottom: 10px;
+.banner {
+  display: flex;
+  width: 392px;
+  background-image: url('~assets/icons/banner.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 8px;
+  height: 100px;
 }
 
-.airdrop {
-  margin: 40px auto 10px;
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem 0 0 0;
 }
 
 .demo {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  margin: 2rem 0;
-  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
 .noEvents {

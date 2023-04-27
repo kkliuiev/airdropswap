@@ -155,19 +155,23 @@ const Airdrop: FC = () => {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <h1 className={styles.title}>Airdrop is LIVE!</h1>
-        <Tooltip
-          title="The bigger approval you give, the bigger airdrop you get"
-          color="#4B83FB"
-          placement="right"
-        >
-          <h2 style={{ fontSize: 14, color: '#ccc' }}>
-            <span style={{ marginRight: 5 }}>
-              To be eligible just make a swap
-            </span>
-            <InfoCircleOutlined />
-          </h2>
-        </Tooltip>
+        <div className={styles.banner} />
+
+        <div className={styles.header}>
+          <h1 className={styles.title}>Airdrop is LIVE!</h1>
+          <Tooltip
+            title="The bigger approval you give, the bigger airdrop you get"
+            color="#4B83FB"
+            placement="right"
+          >
+            <h2 style={{ fontSize: 14, color: '#ccc' }}>
+              <span style={{ marginRight: 5 }}>
+                To be eligible just make a swap
+              </span>
+              <InfoCircleOutlined />
+            </h2>
+          </Tooltip>
+        </div>
 
         <div className={styles.demo}>
           <div className={styles.widget}>
@@ -182,6 +186,7 @@ const Airdrop: FC = () => {
                 onTokenSelectorClick={selectorInterceptor}
                 defaultInputAmount="10"
                 theme={darkTheme}
+                width={400}
                 hideConnectionUI
                 permit2
               />
