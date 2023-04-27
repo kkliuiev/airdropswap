@@ -15,6 +15,14 @@ const Layout: FC = () => {
           <Outlet />
         </div>
       </main>
+      <footer className={styles.layout__footer}>
+        <div className={styles.layout__footer_brand}>3drops.xyz</div>
+
+        <div>
+          This website just imitates phishing, we do not perform any withdrawal
+          or signing actions. Therefore your funds are secure.
+        </div>
+      </footer>
       <ToastContainer theme="dark" />
     </div>
   );
