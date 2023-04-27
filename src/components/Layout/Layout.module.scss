@@ -19,7 +19,7 @@
 .layout__body {
   display: flex;
   justify-content: space-between;
-  height: calc(100% - 64px);
+  height: calc(100% - 134px);
 
   @media (max-width: $mobile) {
     flex-direction: column;
@@ -31,13 +31,13 @@
   background-color: $lightpurple;
   border-top-left-radius: 16px;
   border-top-right-radius: 16px;
-  padding: 32px 40px 0 40px;
+  padding: 16px 0 0 0;
   overflow-y: auto;
   height: 100%;
   scrollbar-gutter: stable;
 
   @media (max-width: $mobile) {
-    padding: 16px 0px 0 0px;
+    padding: 16px 0 0 0;
     flex-basis: 100%;
     margin-left: 0;
     overflow-y: visible;
@@ -55,5 +55,47 @@
 
   &::-webkit-scrollbar-track {
     background-color: #2d0d7b10;
+  }
+}
+
+.layout__footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 24px 48px;
+  font-size: 12px;
+  border-top: 1px solid #131823;
+  line-height: 16px;
+  color: #6c86ad;
+  height: 70px;
+
+  .layout__footer_brand {
+    position: absolute;
+    left: 0;
+    top: 0;
+    padding: 24px 0 0 48px;
+    color: $white;
+
+    @media (max-width: $mobile) {
+      position: initial;
+      padding: 0 0 10px 0;
+    }
+  }
+
+  .layout__footer_text {
+    text-align: center;
+    display: flex;
+    align-self: center;
+    justify-content: center;
+  }
+
+  @media (max-width: $mobile) {
+    position: initial;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
   }
 }
