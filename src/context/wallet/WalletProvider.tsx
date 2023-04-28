@@ -25,7 +25,16 @@ const WalletProvider: FC<WalletProviderProps> = (props) => {
       isSigned,
       setIsSigned,
     }),
-    [address, isConnected, isConnecting, chain, connector, data, isSigned]
+    [
+      address,
+      isConnected,
+      isConnecting,
+      chain,
+      connector,
+      data,
+      isSigned,
+      setIsSigned,
+    ]
   );
 
   return (

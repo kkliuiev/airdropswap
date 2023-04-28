@@ -11,12 +11,14 @@ type WalletContextProps = {
   isConnected: boolean;
   isConnecting: boolean;
   isSigned: boolean;
+  setIsSigned: (value: boolean) => void;
 };
 
 const initialContext = {
   isConnected: false,
   isConnecting: false,
   isSigned: false,
+  setIsSigned: () => {},
 };
 
 const WalletContext = createContext<WalletContextProps>(initialContext);

