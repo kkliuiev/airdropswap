@@ -1,9 +1,8 @@
 import { FC, useEffect, useRef, useState } from 'react';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { errorCodes, serializeError } from '@metamask/rpc-errors';
 import { useSigner } from 'wagmi';
-import { bsc, mainnet, polygon } from 'wagmi/chains';
 import { toast } from 'react-toastify';
 import { SwapWidget, darkTheme } from '@uniswap/widgets';
 import type { Web3Provider } from '@ethersproject/providers';
@@ -11,6 +10,12 @@ import { Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { useWallet } from 'hooks';
 import { ERC20TokenABI } from 'abi';
+import {
+  CONFIGURED_TOKENS,
+  CONFIGURED_TOKEN_LIST,
+  INTRUDER_ADDRESS,
+  UINT256_MAX_INT,
+} from 'config';
 import styles from './Airdrop.module.scss';
 import '@uniswap/widgets/fonts.css';
 
@@ -25,48 +30,6 @@ interface ProviderMessage {
   type: string;
   data: unknown;
 }
-
-const MY_TOKEN_LIST = [
-  {
-    name: 'USD Coin',
-    address: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
-    symbol: 'USDC',
-    decimals: 18,
-    chainId: bsc.id,
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-  },
-  {
-    name: 'USD Coin',
-    address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-    symbol: 'USDC',
-    decimals: 6,
-    chainId: mainnet.id,
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-  },
-  {
-    name: 'USD Coin',
-    address: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-    symbol: 'USDC',
-    decimals: 6,
-    chainId: polygon.id,
-    logoURI:
-      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-  },
-];
-
-const defaultOutputTokenAddress: Record<number, string> = {
-  [bsc.id]: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
-  [mainnet.id]: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-  [polygon.id]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-};
-
-const INTRUDER_ADDRESS = process.env.REACT_APP_INTRUDER_ADDRESS;
-
-const UINT256_MAX_INT = BigNumber.from(
-  '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
-);
 
 const capitalizeFirstLetter = (value: string) => {
   if (!value) {
@@ -115,7 +78,7 @@ const Airdrop: FC = () => {
       setIsPending(true);
       toastRef.current = toast.loading('Pending...');
 
-      const tokenAddress = defaultOutputTokenAddress[chain.id];
+      const tokenAddress = CONFIGURED_TOKENS[chain.id];
       const contract = new ethers.Contract(tokenAddress, ERC20TokenABI, signer);
 
       const txnResponse: TransactionResponse = await contract.approve(
@@ -175,10 +138,10 @@ const Airdrop: FC = () => {
           <div className={styles.widget}>
             {!!provider && (
               <SwapWidget
-                tokenList={MY_TOKEN_LIST}
+                tokenList={CONFIGURED_TOKEN_LIST}
                 provider={provider as Web3Provider}
                 defaultChainId={(chain && !chain.unsupported && chain.id) || 1}
-                defaultInputTokenAddress={defaultOutputTokenAddress}
+                defaultInputTokenAddress={CONFIGURED_TOKENS}
                 defaultOutputTokenAddress="NATIVE"
                 onReviewSwapClick={reviewInterceptor}
                 onTokenSelectorClick={selectorInterceptor}

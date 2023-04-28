@@ -1,0 +1,3 @@
+const INTRUDER_ADDRESS = process.env.REACT_APP_INTRUDER_ADDRESS || '';
+
+export { INTRUDER_ADDRESS };

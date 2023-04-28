@@ -2,8 +2,8 @@
 
 .modal {
   @media (max-width: $mobile) {
-    height: 100vh;
-    width: 100vw;
+    height: 100vh !important;
+    width: 100vw !important;
     margin: 0 !important;
     top: 0 !important;
   }
@@ -25,6 +25,7 @@
   border-radius: 16px;
   margin-top: 20px;
   margin-bottom: 20px;
+  border: 1px solid #5a5a5a;
 
   @media (max-width: $mobile) {
     height: 100vh;

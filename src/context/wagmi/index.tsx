@@ -27,7 +27,7 @@ const { chains, provider, webSocketProvider } = configureChains(
 );
 
 const wagmiClient = createClient({
-  autoConnect: true,
+  autoConnect: false,
   connectors: w3mConnectors({
     projectId: WALLET_CONNECT_PROJECT_ID,
     version: 1,

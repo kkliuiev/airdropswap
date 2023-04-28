@@ -13,8 +13,8 @@ import { Content } from 'components';
 const theme = {
   token: {
     fontFamily: 'Inter, sans-serif',
-    colorPrimary: '#2d0d7b',
-    colorPrimaryHover: '#2d0d7b90',
+    colorPrimary: '#3396FF',
+    colorPrimaryHover: '#2e87e6',
     colorFillContent: 'rgba(0, 0, 0, 0.25)',
   },
 };

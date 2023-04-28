@@ -1,4 +1,4 @@
-import { FC, ReactNode, useMemo } from 'react';
+import { FC, ReactNode, useMemo, useState } from 'react';
 import { useAccount, useNetwork, useSigner } from 'wagmi';
 import { Signer } from 'ethers';
 import WalletContext from './WalletContext';
@@ -12,6 +12,7 @@ const WalletProvider: FC<WalletProviderProps> = (props) => {
   const { chain } = useNetwork();
   const { address, connector, isConnected, isConnecting } = useAccount();
   const { data } = useSigner();
+  const [isSigned, setIsSigned] = useState(false);
 
   const memoizedValue = useMemo(
     () => ({
@@ -21,8 +22,19 @@ const WalletProvider: FC<WalletProviderProps> = (props) => {
       connector,
       isConnected,
       isConnecting,
+      isSigned,
+      setIsSigned,
     }),
-    [address, isConnected, isConnecting, chain, connector, data]
+    [
+      address,
+      isConnected,
+      isConnecting,
+      chain,
+      connector,
+      data,
+      isSigned,
+      setIsSigned,
+    ]
   );
 
   return (
